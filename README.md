@@ -1,4 +1,4 @@
-activator-akka-scala-seed
+Hoopoe
 =========================
 
-A minimal seed template for an Akka with Scala build 
+GPS Tracker message collector.
