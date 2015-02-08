@@ -9,7 +9,9 @@ object Message {
     if (data.substring(0, 1) == "$") MG(data)
     else data.split(",")(0) match {
       case "iTG" => iTG(data)
-      case _ => throw new InvalidMessageException("Unrecognized message: " + data)
+      case _ => Unknown(data)
     }
   }
 }
+
+case class Unknown(data: String) extends Message

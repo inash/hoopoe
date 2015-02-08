@@ -4,6 +4,7 @@ import java.net.InetSocketAddress
 
 import com.hoopoe.message.MG
 import com.hoopoe.message.Message
+import com.hoopoe.message.Unknown
 import com.hoopoe.message.iTG
 
 import akka.actor.ActorSystem
@@ -80,6 +81,8 @@ class TcpHandlerActor extends Actor {
         stmt.executeUpdate()
         stmt.close()
         conn.close()
+      
+      case Unknown(data) => println("Unknown: " + data)
     }
   }
 
