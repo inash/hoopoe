@@ -14,6 +14,7 @@ import akka.io.IO
 import akka.io.Tcp
 import akka.io.Tcp.Bind
 import akka.io.Tcp.Bound
+import akka.io.Tcp.Close
 import akka.io.Tcp.Connected
 import akka.io.Tcp.Received
 import akka.io.Tcp.Register
@@ -42,14 +43,28 @@ class TcpActor extends Actor {
   }
 }
 
+object TcpHandlerActor {
+  case class Handle(msg: String)
+}
+
 class TcpHandlerActor extends Actor {
   import Tcp._
   import context.dispatcher
+  import TcpHandlerActor._
+
+  var message = ""
 
   def receive = {
     case Received(data) =>
       val d = ascii(data)
-      identifyMessage(d)
+      d.foreach(c => {
+        if (c == '\n') { self forward Handle(message); message = "" }
+        else message += c
+      })
+
+    case Handle(msg) =>
+      log.debug(msg)
+      identifyMessage(msg)
 
     case _ => None
   }
@@ -81,6 +96,7 @@ class TcpHandlerActor extends Actor {
         stmt.executeUpdate()
         stmt.close()
         conn.close()
+        sender ! Close
       
       case Unknown(data) => println("Unknown: " + data)
     }
