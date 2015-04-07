@@ -96,7 +96,6 @@ class TcpHandlerActor extends Actor {
         stmt.executeUpdate()
         stmt.close()
         conn.close()
-        sender ! Close
       
       case Unknown(data) => println("Unknown: " + data)
     }
